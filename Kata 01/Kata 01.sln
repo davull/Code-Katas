@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kata 01", "Kata 01\Kata 01.csproj", "{EEB0943F-4CD1-492F-9D43-0A1912A99C16}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EEB0943F-4CD1-492F-9D43-0A1912A99C16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEB0943F-4CD1-492F-9D43-0A1912A99C16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEB0943F-4CD1-492F-9D43-0A1912A99C16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEB0943F-4CD1-492F-9D43-0A1912A99C16}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
