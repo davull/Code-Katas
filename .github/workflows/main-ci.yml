@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: '*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    
+    - name: Restore dependencies for 'Kata 01'
+      run: dotnet restore '.\Kata 01\Kata 01.sln'
+    
+    - name: Build 'Kata 01'
+      run: dotnet build --no-restore '.\Kata 01\Kata 01.sln'
+    
+    - name: Test 'Kata 01'
+      run: dotnet test --no-build --verbosity normal '.\Kata 01\Kata 01.sln'
