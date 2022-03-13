@@ -31,5 +31,5 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: dotnet-test-results-Kata-01
-        path: "TestResults\Kata 01"
+        path: "TestResults\\Kata 01"
       if: ${{ always() }}
