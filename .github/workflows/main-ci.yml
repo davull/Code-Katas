@@ -19,17 +19,17 @@ jobs:
         dotnet-version: 6.0.x
     
     - name: Restore dependencies for 'Kata 01'
-      run: dotnet restore '.\Kata 01\Kata 01.sln'
+      run: dotnet restore './Kata 01/Kata 01.sln'
     
     - name: Build 'Kata 01'
-      run: dotnet build --no-restore '.\Kata 01\Kata 01.sln'
+      run: dotnet build --no-restore './Kata 01/Kata 01.sln'
     
     - name: Test 'Kata 01'
-      run: dotnet test --no-build --verbosity normal --logger trx --results-directory "TestResults\Kata 01" ".\Kata 01\Kata 01.sln"
+      run: dotnet test --no-build --verbosity normal --logger trx --results-directory "./TestResults/Kata 01" "./Kata 01/Kata 01.sln"
     
     - name: Upload test results 'Kata 01'
       uses: actions/upload-artifact@v3
       with:
         name: dotnet-test-results-Kata-01
-        path: "TestResults\\Kata 01"
+        path: "./TestResults/Kata 01"
       if: ${{ always() }}
