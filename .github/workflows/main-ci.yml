@@ -27,9 +27,10 @@ jobs:
     - name: Test 'Kata 01'
       run: dotnet test --no-build --verbosity normal --logger trx --results-directory "./TestResults/Kata 01" "./Kata 01/Kata 01.sln"
     
-    - name: Upload test results 'Kata 01'
-      uses: actions/upload-artifact@v3
-      with:
-        name: dotnet-test-results-Kata-01
-        path: "./TestResults/Kata 01"
+    - name: Display test results 'Kata 01'
+      uses: dorny/test-reporter@v1
       if: ${{ always() }}
+      with:
+        name: "Kata 01 tests"
+        path: "./TestResults/Kata 01/*.trx"
+        reporter: dotnet-trx
