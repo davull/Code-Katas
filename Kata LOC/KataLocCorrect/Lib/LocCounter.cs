@@ -2,6 +2,8 @@
 
 public static class LocCounter
 {
+    private delegate void ContinuationAction(ref string text, ref int i);
+
     private const char Slash = '/';
     private const char Escape = '\\';
     private const char NewLine = '\n';
@@ -13,39 +15,57 @@ public static class LocCounter
         var currentLineHasCode = false;
         var loc = 0;
 
-        for (var i = 0; i < text.Length; i++)
+        var newLineContinuation = new Action(() =>
         {
-            if (IsNewLine(ref text, i))
-            {
-                if (currentLineHasCode)
-                    loc++;
+            if (currentLineHasCode)
+                loc++;
 
-                currentLineHasCode = false;
-            }
-            else if (IsStartOfWhiteSpace(ref text, i))
-            {
-                ProcessWhiteSpace(ref text, ref i);
-            }
-            else if (IsStartOfSingleLineComment(ref text, i))
-            {
-                ProcessSingleLineComment(ref text, ref i);
-            }
-            else if (IsStartOfMultiLineComment(ref text, i))
-            {
-                ProcessMultiLineComment(ref text, ref i);
-            }
-            else
-            {
-                loc += ProcessCode(ref text, ref i);
-                currentLineHasCode = true;
-            }
-        }
+            currentLineHasCode = false;
+        });
+
+        var codeContinuation = new ContinuationAction((ref string t, ref int i) =>
+        {
+            loc += ProcessCode(ref t, ref i);
+            currentLineHasCode = true;
+        });
+
+        for (var i = 0; i < text.Length; i++)
+            ProcessChar(
+                text: ref text,
+                i: ref i,
+                newLineContinuation: newLineContinuation,
+                startOfWhiteSpaceContinuation: ProcessWhiteSpace,
+                startOfSingleLineCommentContinuation: ProcessSingleLineComment,
+                startOfMultiLineCommentContinuation: ProcessMultiLineComment,
+                codeContinuation: codeContinuation);
 
         if (currentLineHasCode)
             loc++;
 
         return loc;
     }
+
+    private static void ProcessChar(
+        ref string text,
+        ref int i,
+        Action newLineContinuation,
+        ContinuationAction startOfWhiteSpaceContinuation,
+        ContinuationAction startOfSingleLineCommentContinuation,
+        ContinuationAction startOfMultiLineCommentContinuation,
+        ContinuationAction codeContinuation)
+    {
+        if (IsNewLine(ref text, i))
+            newLineContinuation();
+        else if (IsStartOfWhiteSpace(ref text, i))
+            startOfWhiteSpaceContinuation(ref text, ref i);
+        else if(IsStartOfSingleLineComment(ref text, i))
+            startOfSingleLineCommentContinuation(ref text, ref i);
+        else if (IsStartOfMultiLineComment(ref text, i))
+            startOfMultiLineCommentContinuation(ref text, ref i);
+        else
+            codeContinuation(ref text, ref i);
+    }
+
 
     private static bool IsNewLine(ref string text, int i) => text[i] == NewLine;
 
@@ -119,7 +139,7 @@ public static class LocCounter
 
     private static int ProcessCode(ref string text, ref int i)
     {
-        var isStartOfCommentOfNewLine = (ref string text, int i) =>
+        var isStartOfCommentOrNewLine = (ref string text, int i) =>
             IsStartOfAnyComment(ref text, i) || IsNewLine(ref text, i);
 
         var newLinesInStrings = 0;
@@ -133,7 +153,7 @@ public static class LocCounter
                 continue;
             }
 
-            if (isStartOfCommentOfNewLine(ref text, i) == false)
+            if (isStartOfCommentOrNewLine(ref text, i) == false)
                 continue;
 
             i--;
