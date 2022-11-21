@@ -29,11 +29,3 @@ jobs:
     
     - name: Test
       run: dotnet test --no-build --verbosity normal --logger trx --results-directory "./TestResults/Kata 01" "./Kata 01/Kata 01.sln"
-    
-    - name: Display test results
-      uses: dorny/test-reporter@v1
-      if: ${{ always() }}
-      with:
-        name: "Kata 01 tests"
-        path: "./TestResults/Kata 01/*.trx"
-        reporter: dotnet-trx
