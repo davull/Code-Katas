@@ -31,9 +31,7 @@ jobs:
       run: dotnet test --no-build --verbosity normal --logger trx --results-directory "./TestResults/Kata LOC" "./Kata LOC/KataLoc.sln"
     
     - name: Display test results
-      uses: dorny/test-reporter@v1
-      if: ${{ always() }}
+      uses: zyborg/dotnet-tests-report@v1.4.4
       with:
-        name: "Tests"
-        path: "./TestResults/Kata LOC/*.trx"
-        reporter: dotnet-trx
+        test_results_path: "./TestResults/Kata LOC"
+        github_token: ${{ secrets.TEST_REPORT_TOKEN }}
