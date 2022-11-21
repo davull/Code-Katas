@@ -2,7 +2,10 @@ name: CI
 
 on:
   push:
-    branches: '*'
+    branches:
+      - main
+    paths:
+      - "Kata 01/**"
   workflow_dispatch:
 
 jobs:
@@ -18,16 +21,16 @@ jobs:
       with:
         dotnet-version: 6.0.x
     
-    - name: Restore dependencies for 'Kata 01'
+    - name: Restore dependencies
       run: dotnet restore './Kata 01/Kata 01.sln'
     
-    - name: Build 'Kata 01'
+    - name: Build
       run: dotnet build --no-restore './Kata 01/Kata 01.sln'
     
-    - name: Test 'Kata 01'
+    - name: Test
       run: dotnet test --no-build --verbosity normal --logger trx --results-directory "./TestResults/Kata 01" "./Kata 01/Kata 01.sln"
     
-    - name: Display test results 'Kata 01'
+    - name: Display test results
       uses: dorny/test-reporter@v1
       if: ${{ always() }}
       with:

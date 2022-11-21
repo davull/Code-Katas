@@ -65,7 +65,7 @@ public static class LocCounter
         else
             codeContinuation(ref text, ref i);
     }
-    
+
     private static bool IsNewLine(ref string text, int i) => text[i] == NewLine;
 
     private static bool IsStartOfWhiteSpace(ref string text, int i) => char.IsWhiteSpace(text[i]);
