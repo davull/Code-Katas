@@ -1,0 +1,39 @@
+name: Kata LOC CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Kata LOC/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    
+    - name: Restore dependencies
+      run: dotnet restore './Kata LOC/KataLoc.sln'
+    
+    - name: Build solution
+      run: dotnet build --no-restore './Kata LOC/KataLoc.sln'
+    
+    - name: Run tests
+      run: dotnet test --no-build --verbosity normal --logger trx --results-directory "./TestResults/Kata LOC" "./Kata LOC/KataLoc.sln"
+    
+    - name: Display test results
+      uses: dorny/test-reporter@v1
+      if: ${{ always() }}
+      with:
+        name: "Tests"
+        path: "./TestResults/Kata LOC/*.trx"
+        reporter: dotnet-trx
